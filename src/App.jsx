@@ -1,11 +1,13 @@
-import { useState } from "react";
+import UserContext from "./context/UserContext"; 
 import "./App.css";
 import Home from "./components/Home";
 
 function App() {
   return (
     <div>
-      <Home />
+      <UserContext>
+        <Home />
+      </UserContext>
     </div>
   );
 }

@@ -24,7 +24,7 @@ import image23 from "../assets/image23.avif";
 import image24 from "../assets/image24.avif";
 import image25 from "../assets/image25.avif";
 
-export const food_items = [
+const food_items = [
     {"id": 1, "food_name": "Pancakes", "food_category": "breakfast", "food_type": "veg", "food_quantity": 1, "food_image": image1, "price": 499},
     {"id": 2, "food_name": "Chicken Soup", "food_category": "soups", "food_type": "non_veg", "food_quantity": 1, "food_image": image2, "price": 399},
     {"id": 3, "food_name": "Minestrone Soup", "food_category": "soups", "food_type": "veg", "food_quantity": 1, "food_image": image3, "price": 349},
