@@ -9,6 +9,7 @@ import Cart from "./Cart";
 import { useDispatch, useSelector } from "react-redux";
 import { MdAutoDelete } from "react-icons/md";
 import { ClearCart } from "../redux/cartSlice";
+import { toast } from "react-toastify";
 
 function Home() {
     let { input, setInput, category, setCategory, showCart, setShowCart } =
@@ -59,18 +60,28 @@ function Home() {
                 </div>
             ) : null}
 
-            <div className=" w-full flex flex-wrap gap-6 px-4 pt-4  pb-8 justify-center items-center ">
-                {category.map((item) => (
-                    <Card
-                        key={item.id}
-                        name={item.food_name}
-                        image={item.food_image}
-                        id={item.id}
-                        price={item.price}
-                        type={item.food_type}
-                    />
-                ))}
-            </div>
+            {category.length > 0 ? (
+                <>
+                    <div className=" w-full flex flex-wrap gap-6 px-4 pt-4  pb-8 justify-center items-center ">
+                        {category.map((item) => (
+                            <Card
+                                key={item.id}
+                                name={item.food_name}
+                                image={item.food_image}
+                                id={item.id}
+                                price={item.price}
+                                type={item.food_type}
+                            />
+                        ))}
+                    </div>
+                </>
+            ) : (
+                <div className="w-full flex justify-center items-center mt-8">
+                    <span className="text-xl font-semibold text-gray-500">
+                        No Dish Found
+                    </span>
+                </div>
+            )}
 
             <div
                 className={` w-full md:w-[40vw] h-[100%] fixed top-0 right-0 bg-white shadow-xl p-5 
@@ -84,76 +95,89 @@ function Home() {
                         onClick={() => setShowCart(!showCart)}
                     />
                 </header>
-                <div className="w-full flex justify-end mb-2">
-                    <button
-                        className="p-2 px-4 bg-blue-100 font-semibold rounded-lg cursor-pointer transition-all hover:bg-blue-200"
-                        onClick={() => dispatch(ClearCart())}
-                    >
-                        <span className="flex items-center gap-2">
-                            Clear Cart <MdAutoDelete />
-                        </span>
-                    </button>
-                </div>
-                <div className="w-full overflow-y-scroll flex flex-col mt-8 gap-8">
-                    {item.map((item) => {
-                        return (
-                            <Cart
-                                key={item.id}
-                                id={item.id}
-                                name={item.name}
-                                image={item.image}
-                                price={item.price}
-                                qty={item.qty}
-                            />
-                        );
-                    })}
-                
-                <div className="w-full border-t-2 border-b-2 border-gray-400 mt-7 flex flex-col gap-2 p-6">
-                    <div className="w-full flex justify-between items-center">
-                        <span className="text-m font-semibold text-gray-400 ">
-                            SubTotal
-                        </span>
-                        <span className="text-m font-semibold text-green-400">
-                            Rs.{subTotal} /-
+                {item.length > 0 ? (
+                    <>
+                        <div className="w-full flex justify-end mb-2">
+                            <button
+                                className="p-2 px-4 bg-blue-100 font-semibold rounded-lg cursor-pointer transition-all hover:bg-blue-200"
+                                onClick={() => dispatch(ClearCart())}
+                            >
+                                <span className="flex items-center gap-2">
+                                    Clear Cart <MdAutoDelete />
+                                </span>
+                            </button>
+                        </div>
+                        <div className="w-full overflow-y-scroll flex flex-col mt-8 gap-8">
+                            {item.map((item) => {
+                                return (
+                                    <Cart
+                                        key={item.id}
+                                        id={item.id}
+                                        name={item.name}
+                                        image={item.image}
+                                        price={item.price}
+                                        qty={item.qty}
+                                    />
+                                );
+                            })}
+
+                            <div className="w-full border-t-2 border-b-2 border-gray-400 mt-7 flex flex-col gap-2 p-6">
+                                <div className="w-full flex justify-between items-center">
+                                    <span className="text-m font-semibold text-gray-400 ">
+                                        SubTotal
+                                    </span>
+                                    <span className="text-m font-semibold text-green-400">
+                                        Rs.{subTotal} /-
+                                    </span>
+                                </div>
+                                <div className="w-full flex justify-between items-center">
+                                    <span className="text-m font-semibold text-gray-400 ">
+                                        Delivery Fee
+                                    </span>
+                                    <span className="text-m font-semibold text-green-400">
+                                        Rs.{deliveryfee} /-
+                                    </span>
+                                </div>
+                                <div className="w-full flex justify-between items-center">
+                                    <span className="text-m font-semibold text-gray-400 ">
+                                        Taxes
+                                    </span>
+                                    <span className="text-m font-semibold text-green-400">
+                                        Rs. {tax} /-
+                                    </span>
+                                </div>
+                                <div className="w-full flex justify-between items-center">
+                                    <span className="text-m font-semibold text-gray-400 ">
+                                        Discount
+                                    </span>
+                                    <span className="text-m font-semibold text-green-400">
+                                        Rs.{discount} /-
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="w-full flex justify-between items-center mt-4 p-4">
+                                <span className="text-lg font-semibold text-gray-400 ">
+                                    Todat{" "}
+                                </span>
+                                <span className="text-lg font-semibold text-green-400">
+                                    Rs.{total} /-
+                                </span>
+                            </div>
+                            <div className="w-full flex justify-center mb-4">
+                                <button className="w-[70%] p-3 bg-green-500 text-white rounded-lg cursor-pointer transition-all
+                                 hover:bg-green-300" onClick={() => toast.success("Order Placed")}> 
+                                    Place Order
+                                </button>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <div className="w-full flex justify-center items-center mt-8">
+                        <span className="text-xl font-semibold text-gray-500">
+                            Your Cart is Empty
                         </span>
                     </div>
-                    <div className="w-full flex justify-between items-center">
-                        <span className="text-m font-semibold text-gray-400 ">
-                            Delivery Fee
-                        </span>
-                        <span className="text-m font-semibold text-green-400">
-                            Rs.{deliveryfee} /-
-                        </span>
-                    </div>
-                    <div className="w-full flex justify-between items-center">
-                        <span className="text-m font-semibold text-gray-400 ">Taxes</span>
-                        <span className="text-m font-semibold text-green-400">
-                            Rs. {tax} /-
-                        </span>
-                    </div>
-                    <div className="w-full flex justify-between items-center">
-                        <span className="text-m font-semibold text-gray-400 ">
-                            Discount
-                        </span>
-                        <span className="text-m font-semibold text-green-400">
-                            Rs.{discount} /-
-                        </span>
-                    </div>
-                </div>
-                <div className="w-full flex justify-between items-center mt-4 p-4">
-                    <span className="text-lg font-semibold text-gray-400 ">Todat </span>
-                    <span className="text-lg font-semibold text-green-400">
-                        Rs.{total} /-
-                    </span>
-                </div>
-                <button
-                    className="w-[70%] p-3 bg-green-500 text-white rounded-lg cursor-pointer transition-all
-                        hover:bg-green-300"
-                >
-                    {" "}
-                    Place Order
-                </button>
-            </div>
+                )}
             </div>
         </div>
     );
